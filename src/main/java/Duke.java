@@ -3,40 +3,42 @@ import java.util.ArrayList;
 
 public class Duke {
     public static void main(String[] args) {
-        String greeting = "    ____________________________________________________________\n" +
-                "    Hello! I'm Duke\n" +
-                "    What can I do for you?\n" +
-                "    ____________________________________________________________\n";
+        String greeting = "\t____________________________________________________________\n" +
+                "\tHello! I'm Duke\n" +
+                "\tWhat can I do for you?\n" +
+                "\t____________________________________________________________\n";
         System.out.println(greeting);
 
-        //level-1
         String inputCommand = "";
-        ArrayList<String> taskList = new ArrayList<String>();
+        ArrayList<Task> taskList = new ArrayList<Task>();
         Scanner in = new Scanner(System.in);
-        outerloop:
         while(!inputCommand.toLowerCase().equals("bye")){
             inputCommand = in.nextLine();
+            System.out.println("\t____________________________________________________________");
             switch(inputCommand){
-            case "list":
-                int i = 0;
-                System.out.println("    ____________________________________________________________");
-                for(String task : taskList){
-                    System.out.println(++i + ". " + task);
+            case "list": // list out tasks
+                for(int i = 0; i < taskList.size(); i++){
+                    Task t = taskList.get(i);
+                    System.out.println( "\t" + (i+1) + ". " + "[" + t.getStatusIcon() + "] " + t.getDescription());
                 }
-                System.out.println("    ____________________________________________________________");
                 break;
-            case "bye":
-                break outerloop;
+            case "bye": //break loop
+                System.out.println("\tBye. Hope to see you again soon!");
+                break;
             default:
-                taskList.add(inputCommand);
-                System.out.println("    ____________________________________________________________\n" +
-                        "     added: " + inputCommand + "\n" +
-                        "    ____________________________________________________________");
+                if(inputCommand.length() > 5 && inputCommand.substring(0,4).toLowerCase().equals("done")){ //set done
+                    Task inputTask = taskList.get(Integer.parseInt(inputCommand.substring(5)) - 1);
+                    inputTask.setDone(true);
+                    System.out.println("\tNice! I've marked this task as done:\n" +
+                            "\t[" + inputTask.getStatusIcon() + "] " + inputTask.getDescription());
+                }else{ // add task
+                    taskList.add(new Task(inputCommand));
+                    System.out.println("\tadded: " + inputCommand);
+                }
                 break;
             }
+            System.out.println("\t____________________________________________________________");
         }
-        System.out.println("    ____________________________________________________________\n" +
-                "     Bye. Hope to see you again soon!\n" +
-                "    ____________________________________________________________");
+
     }
 }
