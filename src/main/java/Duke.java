@@ -75,15 +75,12 @@ public class Duke {
 
     public static void main(String[] args) {
         System.out.println(MESSAGE_GREETING);
-        while(!inputCommand.toLowerCase().equals("bye")){
+        while(!inputCommand.equals("bye")){
             inputCommand = in.nextLine();
             System.out.println(MESSAGE_LINEBREAK);
             switch(firstWordOf(inputCommand)){
             case "list":
                 printList();
-                break;
-            case "bye":
-                System.out.println(MESSAGE_BYE);
                 break;
             case "done":
                 markDone(inputCommand);
@@ -97,12 +94,14 @@ public class Duke {
             case "event":
                 addEvent(inputCommand);
                 break;
+            case "bye":
+                System.out.println(MESSAGE_BYE);
+                break;
             default:
                 System.out.println(MESSAGE_ERROR);
                 break;
             }
             System.out.println(MESSAGE_LINEBREAK);
         }
-
     }
 }
