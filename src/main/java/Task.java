@@ -24,4 +24,8 @@ public class Task {
     public int getNumberOfTasks(){
         return numberOfTasks;
     }
+
+    public String toString(){
+        return "[" + this.getStatusIcon() + "] " + this.getDescription();
+    }
 }
