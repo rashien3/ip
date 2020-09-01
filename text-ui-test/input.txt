@@ -1,0 +1,7 @@
+todo borrow book
+deadline return book /by June 6th
+event book eating competition /at June 7th
+list
+done 2
+list
+bye
