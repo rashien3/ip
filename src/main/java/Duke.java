@@ -12,6 +12,7 @@ public class Duke {
     private static ArrayList<Task> taskList = new ArrayList<Task>();
     private static Scanner in = new Scanner(System.in);
     private static String inputCommand = "";
+    private static int numberOfTasks = 0;
 
     public static String firstWordOf(String input){
         if(input.contains(" "))
@@ -20,9 +21,9 @@ public class Duke {
             return input;
     }
 
-    public static String removeFirstWord(String input){
+    public static String removeFirstWordOf(String input){
         if(input.contains(" "))
-            return inputCommand.substring(inputCommand.indexOf(' '));
+            return inputCommand.substring(inputCommand.indexOf(' ') + 1);
         else
             return "";
     }
@@ -34,23 +35,42 @@ public class Duke {
         }
     }
 
-    public static void markDone(int taskNumber){
+    public static void markDone(String inputCommand){
+        int taskNumber = Integer.parseInt(removeFirstWordOf(inputCommand)) - 1;
         Task inputTask = taskList.get(taskNumber);
         inputTask.setDone(true);
-        System.out.println("Nice! I've marked this task as done:\n" +
-                "[" + inputTask.getStatusIcon() + "] " + inputTask.getDescription());
+        System.out.println("Nice! I've marked this task as done:\n\t" + inputTask.toString());
     }
 
     public static void addTodo(String inputCommand){
-
+        Task t = new ToDo(removeFirstWordOf(inputCommand));
+        addTask(t);
     }
 
     public static void addDeadline(String inputCommand){
+        int byIndex = inputCommand.indexOf("/by");
 
+        String description = inputCommand.substring(9, byIndex - 1);
+        String by = inputCommand.substring(byIndex + 4);
+
+        Task t = new Deadline(description, by);
+        addTask(t);
     }
 
     public static void addEvent(String inputCommand){
+        int atIndex = inputCommand.indexOf("/at");
 
+        String description = inputCommand.substring(6, atIndex - 1);
+        String at = inputCommand.substring(atIndex + 4);
+
+        Task t = new Event(description, at);
+        addTask(t);
+    }
+
+    public static void addTask(Task t){
+        taskList.add(t);
+        System.out.println("Got it. I've added this task:\n\t" + t.toString());
+        System.out.println("Now you have " + (++numberOfTasks) + " tasks in the list.");
     }
 
     public static void main(String[] args) {
@@ -66,12 +86,7 @@ public class Duke {
                 System.out.println(MESSAGE_BYE);
                 break;
             case "done":
-                int taskNumber = Integer.parseInt(inputCommand.substring(5)) - 1;
-                markDone(taskNumber);
-                break;
-            case "add":
-                taskList.add(new Task(inputCommand));
-                System.out.println("added: " + inputCommand);
+                markDone(inputCommand);
                 break;
             case "todo":
                 addTodo(inputCommand);
