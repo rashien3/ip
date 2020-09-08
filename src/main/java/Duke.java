@@ -116,7 +116,7 @@ public class Duke {
     }
 
     public static void addEvent(String inputCommand) throws DukeException {
-        String eventCommand, description = "", at = "";
+        String description = "", at = "", eventCommand;
         int atIndex;
 
         eventCommand = removeFirstWordOf(inputCommand).trim();
