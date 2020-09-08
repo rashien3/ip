@@ -91,7 +91,7 @@ public class Duke {
     }
 
     public static void addDeadline(String inputCommand) throws DukeException{
-        String description = "", by = "", deadlineCommand;
+        String deadlineCommand, description = "", by = "";
         int byIndex;
 
         deadlineCommand = removeFirstWordOf(inputCommand);
