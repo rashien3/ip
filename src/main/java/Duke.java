@@ -1,3 +1,8 @@
+import task.Deadline;
+import task.Event;
+import task.Task;
+import task.ToDo;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -14,22 +19,26 @@ public class Duke {
     private static String inputCommand = "";
     private static int numberOfTasks = 0;
 
-    public static String firstWordOf(String input){
-        if(input.contains(" "))
+    public static String getFirstWordOf(String input) {
+        if(input.contains(" ")) {
             return inputCommand.substring(0,inputCommand.indexOf(' '));
-        else
+        }
+        else{
             return input;
+        }
     }
 
-    public static String removeFirstWordOf(String input){
-        if(input.contains(" "))
+    public static String removeFirstWordOf(String input) {
+        if(input.contains(" ")){
             return inputCommand.substring(inputCommand.indexOf(' ') + 1);
-        else
+        }
+        else{
             return "";
+        }
     }
 
     public static void printList(){
-        for(int i = 0; i < taskList.size(); i++){
+        for(int i = 0; i < taskList.size(); i++) {
             Task t = taskList.get(i);
             System.out.println( (i+1) + ". " + t.toString());
         }
@@ -73,12 +82,10 @@ public class Duke {
         System.out.println("Now you have " + (++numberOfTasks) + " tasks in the list.");
     }
 
-    public static void main(String[] args) {
-        System.out.println(MESSAGE_GREETING);
-        while(!inputCommand.equals("bye")){
-            inputCommand = in.nextLine();
-            System.out.println(MESSAGE_LINEBREAK);
-            switch(firstWordOf(inputCommand)){
+    public static void parseCommand(String inputCommand) throws DukeException {
+        System.out.println(MESSAGE_LINEBREAK);
+        try{
+            switch(getFirstWordOf(inputCommand)){
             case "list":
                 printList();
                 break;
@@ -98,10 +105,28 @@ public class Duke {
                 System.out.println(MESSAGE_BYE);
                 break;
             default:
-                System.out.println(MESSAGE_ERROR);
-                break;
+                throw new DukeException();
             }
-            System.out.println(MESSAGE_LINEBREAK);
+        } catch (DukeException e){
+            throw e;
         }
+        System.out.println(MESSAGE_LINEBREAK);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(MESSAGE_GREETING);
+
+        do {
+            try{
+                inputCommand = in.nextLine();
+                parseCommand(inputCommand);
+            } catch (DukeException e){
+                System.out.println(MESSAGE_ERROR);
+                System.out.println(MESSAGE_LINEBREAK);
+            }
+        } while (!inputCommand.equals("bye"));
+
+        System.out.println(MESSAGE_BYE);
+        System.out.println(MESSAGE_LINEBREAK);
     }
 }

@@ -1,3 +1,5 @@
+package task;
+
 public class Task {
     protected String description;
     protected boolean isDone;
@@ -5,7 +7,7 @@ public class Task {
 
     public Task(String description) {
         this.description = description;
-        this.isDone = false;
+        isDone = false;
         numberOfTasks++;
     }
 
@@ -25,6 +27,7 @@ public class Task {
         return numberOfTasks;
     }
 
+    @Override
     public String toString(){
         return "[" + this.getStatusIcon() + "] " + this.getDescription();
     }

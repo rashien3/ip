@@ -4,7 +4,10 @@ REM create bin directory if it doesn't exist
 if not exist ..\bin mkdir ..\bin
 
 REM delete output from previous run
-del ACTUAL.TXT
+if [ -e "./ACTUAL.TXT"]
+then
+    del ACTUAL.TXT
+fi
 
 REM compile the code into the bin folder
 javac  -cp ..\src -Xlint:none -d ..\bin ..\src\main\java\Duke.java
