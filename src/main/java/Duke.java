@@ -16,7 +16,8 @@ public class Duke {
     private static final String MESSAGE_ERROR_INVALID_COMMAND = " is not a valid command";
     private static final String MESSAGE_ERROR_DONE = "ERROR: 'done' must be followed by an integer";
     private static final String MESSAGE_ERROR_TODO = "ERROR: 'todo' must be followed by a desciption";
-    private static final String MESSAGE_ERROR_DEADLINE = "ERROR: 'deadline' must be followed by a desciption";
+    private static final String MESSAGE_ERROR_DELETE = "ERROR: 'delete' must be followed by a desciption";
+    private static final String MESSAGE_ERROR_DEADLINE = "E RROR: 'deadline' must be followed by a desciption";
     private static final String MESSAGE_ERROR_DEADLINE_MISSING_BY = "ERROR: 'deadline' must have a /by tag followed by a time";
     private static final String MESSAGE_ERROR_EVENT = "ERROR: 'event' must be followed by a desciption";
     private static final String MESSAGE_ERROR_EVENT_MISSING_AT = "ERROR: 'event' must have a /at tag followed by a time";
@@ -146,6 +147,29 @@ public class Duke {
         System.out.println("Now you have " + (++numberOfTasks) + " tasks in the list.");
     }
 
+    public static void delete(String inputCommand) {
+        int taskNumber;
+        Task selectedTask;
+
+        try{
+            taskNumber = Integer.parseInt(removeFirstWordOf(inputCommand)) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println(MESSAGE_ERROR_DELETE);
+            return;
+        }
+
+        try{
+            selectedTask = taskList.get(taskNumber);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("ERROR: task '" + (taskNumber + 1) + "' does not exist");
+            return;
+        }
+
+        System.out.println("Noted. I've removed this task:\n\t" + selectedTask.toString());
+        System.out.println("Now you have " + (--numberOfTasks) + " tasks in the list.");
+        taskList.remove(taskNumber);
+    }
+
     public static void parseCommand(String inputCommand) {
         String firstWord = getFirstWordOf(inputCommand);
 
@@ -183,6 +207,8 @@ public class Duke {
                     System.out.println(MESSAGE_ERROR_EVENT);
                 }
                 break;
+            case "delete":
+                delete(inputCommand);
             case "bye":
                 return;
             default:
