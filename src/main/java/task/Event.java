@@ -8,6 +8,10 @@ public class Event extends Task {
         this.eventTime = eventTime;
     }
 
+    public String getEventTime() {
+        return eventTime;
+    }
+
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (at: " + eventTime + ")";
