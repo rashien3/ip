@@ -12,11 +12,11 @@ import java.util.ArrayList;
 
 public class Duke {
     // file path
-    private static final String root = System.getProperty("user.dir");
+    private static final String home = System.getProperty("user.home");
 
     // inserts correct file path separator to data.txt file
-    private static final Path filePath = Paths.get(root, "src", "main", "resources", "data.txt");
-    private static final Path dirPath = Paths.get(root, "src", "main", "resources");
+    private static final Path filePath = Paths.get(home, "Documents","ip","src", "main", "resources", "data.txt");
+    private static final Path dirPath = Paths.get(home, "Documents","ip","src", "main", "resources");
     private static final boolean directoryExists = Files.exists(dirPath);
 
     private static final String MESSAGE_LINEBREAK = "____________________________________________________________";
@@ -25,7 +25,8 @@ public class Duke {
             "What can I do for you?\n" +
             MESSAGE_LINEBREAK;
     private static final String MESSAGE_BYE = "Bye. Hope to see you again soon!";
-    private static final String MESSAGE_CREATING_FILE = "data.txt not found. Creating file...";
+    private static final String MESSAGE_CREATING_DIRECTORY = " not found. Creating directory...";
+    private static final String MESSAGE_CREATING_FILE = " not found. Creating file...";
     private static final String MESSAGE_ERROR_INVALID_COMMAND = " is not a valid command";
     private static final String MESSAGE_ERROR_DONE = "ERROR: 'done' must be followed by an integer";
     private static final String MESSAGE_ERROR_TODO = "ERROR: 'todo' must be followed by a desciption";
@@ -160,22 +161,31 @@ public class Duke {
 
     public static void addTask(Task t){
         taskList.add(t);
-        System.out.println("Got it. I've added this task:\n\t" + t.toString());
-        System.out.println("Now you have " + (++numberOfTasks) + " tasks in the list.");
+        numberOfTasks++;
+    }
+
+    public static void printAddTaskMessage(Task task) {
+        System.out.println("Got it. I've added this task:\n\t" + task.toString());
+        System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
     }
 
     public static void load() {
         String filePathString = filePath.toString();
         File file = new File(filePathString);
         try {
+            if(!directoryExists) {
+                System.out.println(dirPath + MESSAGE_CREATING_DIRECTORY);
+                File directory = new File(dirPath.toString());
+                directory.mkdir();
+            }
             if (file.createNewFile()) {
-                System.out.println(MESSAGE_CREATING_FILE);
+                System.out.println(filePathString + MESSAGE_CREATING_FILE);
                 System.out.println("File created at: " + file.getCanonicalPath());
             } else {
                 System.out.println("File loaded from: " + file.getCanonicalPath());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("ERROR: Can't find file at: " + filePathString);
         }
 
         FileInputStream stream;
@@ -295,10 +305,10 @@ public class Duke {
         taskList.remove(taskNumber);
     }
 
-    public static void parseCommand(String inputCommand) {
+    public static Task parseCommand(String inputCommand) {
+        Task task = null;
         String firstWord = getFirstWordOf(inputCommand);
 
-        System.out.println(MESSAGE_LINEBREAK);
         try{
             switch(firstWord){
             case "list":
@@ -313,21 +323,21 @@ public class Duke {
                 break;
             case "todo":
                 try{
-                    addTodo(inputCommand);
+                    task = addTodo(inputCommand);
                 } catch(DukeException e) {
                     System.out.println(MESSAGE_ERROR_TODO);
                 }
                 break;
             case "deadline":
                 try{
-                    addDeadline(inputCommand);
+                    task = addDeadline(inputCommand);
                 } catch(DukeException e) {
                     System.out.println(MESSAGE_ERROR_DEADLINE);
                 }
                 break;
             case "event":
                 try{
-                    addEvent(inputCommand);
+                    task = addEvent(inputCommand);
                 } catch(DukeException e) {
                     System.out.println(MESSAGE_ERROR_EVENT);
                 }
@@ -336,17 +346,15 @@ public class Duke {
                 delete(inputCommand);
                 break;
             case "bye":
-                return;
+                return null;
             default:
                 throw new DukeException();
             }
-
-
             save();
         } catch (DukeException e){
-            System.out.println("'" + firstWord + "'" + MESSAGE_ERROR_INVALID_COMMAND);
+            System.out.println("ERROR: '" + firstWord + "'" + MESSAGE_ERROR_INVALID_COMMAND);
         }
-        System.out.println(MESSAGE_LINEBREAK);
+        return task;
     }
 
     public static void main(String[] args) {
@@ -355,7 +363,12 @@ public class Duke {
 
         do {
             inputCommand = in.nextLine();
-            parseCommand(inputCommand);
+            Task task = parseCommand(inputCommand);
+            System.out.println(MESSAGE_LINEBREAK);
+            if(task != null) {
+                printAddTaskMessage(task);
+                System.out.println(MESSAGE_LINEBREAK);
+            };
         } while (!inputCommand.equals("bye"));
 
         System.out.println(MESSAGE_BYE);
