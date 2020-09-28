@@ -8,12 +8,8 @@ import java.util.ArrayList;
 public class TaskList {
     private static final String TAG_BY = "/by ";
     private static final String TAG_AT = "/at ";
-    public static ArrayList<Task> taskList = new ArrayList<Task>();
-    public static int numberOfTasks = 0;
-
-    TaskList () {
-
-    }
+    private static ArrayList<Task> taskList = new ArrayList<Task>();
+    private static int numberOfTasks = 0;
 
     public static void markDone(String inputCommand) {
         int taskNumber;
@@ -104,9 +100,7 @@ public class TaskList {
         addTask(t);
         return t;
     }
-
-
-
+    
     public static void addTask(Task t) {
         taskList.add(t);
         numberOfTasks++;
@@ -135,5 +129,11 @@ public class TaskList {
         taskList.remove(taskNumber);
     }
 
+    public static Task getTask (int i) {
+        return taskList.get(i);
+    }
 
+    public static int getNumberOfTasks() {
+        return numberOfTasks;
+    }
 }

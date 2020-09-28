@@ -14,17 +14,16 @@ public class Duke {
 
     public void run() {
         Storage.load();
-        System.out.println(Ui.MESSAGE_GREETING);
+        Ui.printGreetingMessage();
 
         do {
-            Ui.inputCommand = Ui.readInput();
-            Task task = Parser.parseCommand(Ui.inputCommand);
+            Task task = Parser.parseCommand(Ui.readInput());
             Ui.printLinebreak();
             if(task != null) {
                 Ui.printAddTaskMessage(task);
                 Ui.printLinebreak();
             };
-        } while (!Ui.inputCommand.equals("bye"));
+        } while (!Ui.getInputCommand().equals("bye"));
 
         Ui.printByeMessage();
         Ui.printLinebreak();

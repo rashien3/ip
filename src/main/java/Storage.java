@@ -9,10 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Storage {// file path
-    static final String home = System.getProperty("user.home");// inserts correct file path separator to data.txt file
-    static Path filePath;
-    static Path dirPath;
-    static boolean directoryExists;
+    private static final String home = System.getProperty("user.home");// inserts correct file path separator to data.txt file
+    private static Path filePath;
+    private static Path dirPath;
+    private static boolean directoryExists;
 
     Storage(String filePath) {
         this.filePath = Paths.get(home, "Documents", filePath);
@@ -97,8 +97,8 @@ public class Storage {// file path
     public static void save() {
         StringBuilder lines = new StringBuilder();
 
-        for (int i = 0; i < TaskList.numberOfTasks; i++) {
-            Task task = TaskList.taskList.get(i);
+        for (int i = 0; i < TaskList.getNumberOfTasks(); i++) {
+            Task task = TaskList.getTask(i);
             if (task instanceof ToDo) {
                 lines.append("T|" + (task.getDone() ? "1" : "0") + "| " + task.getDescription());
             } else if (task instanceof Deadline) {
