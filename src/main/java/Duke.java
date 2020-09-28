@@ -1,14 +1,10 @@
-import task.Deadline;
-import task.Event;
-import task.Task;
-import task.ToDo;
+import task.*;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Duke {
     // file path
@@ -27,7 +23,6 @@ public class Duke {
     private static final String MESSAGE_BYE = "Bye. Hope to see you again soon!";
     private static final String MESSAGE_CREATING_DIRECTORY = " not found. Creating directory...";
     private static final String MESSAGE_CREATING_FILE = " not found. Creating file...";
-    private static final String MESSAGE_ERROR_INVALID_COMMAND = " is not a valid command";
     private static final String MESSAGE_ERROR_DONE = "ERROR: 'done' must be followed by an integer";
     private static final String MESSAGE_ERROR_TODO = "ERROR: 'todo' must be followed by a desciption";
     private static final String MESSAGE_ERROR_DELETE = "ERROR: 'delete' must be followed by a desciption";
@@ -37,13 +32,30 @@ public class Duke {
     private static final String MESSAGE_ERROR_EVENT_MISSING_AT = "ERROR: 'event' must have a /at tag followed by a time";
     private static final String MESSAGE_ERROR_EMPTY_LIST = "ERROR: You have no tasks!";
     private static final String MESSAGE_ERROR_FILE = "ERROR: data.txt not found";
-    private static final String TAG_BY = "/by ";
-    private static final String TAG_AT = "/at ";
-    private static ArrayList<Task> taskList = new ArrayList<Task>();
-    private static Scanner in = new Scanner(System.in);
-    private static String inputCommand = "";
-    private static int numberOfTasks = 0;
 
+
+    private static String inputCommand = "";
+
+    public static void printMissingByError() {
+        System.out.println(Duke.MESSAGE_ERROR_DEADLINE_MISSING_BY);
+    }
+
+    public static void printDoneError() {
+        System.out.println(Duke.MESSAGE_ERROR_DONE);
+    }
+
+    public static void printMissingAtError() {
+        System.out.println(Duke.MESSAGE_ERROR_EVENT_MISSING_AT);
+    }
+
+    public static void printDeleteError() {
+        System.out.println(Duke.MESSAGE_ERROR_DELETE);
+    }
+
+    public static String readInput() {
+        Scanner in = new Scanner(System.in);
+        return in.nextLine();
+    }
     public static String getFirstWordOf(String input) {
         if(input.contains(" ")) {
             return inputCommand.substring(0,inputCommand.indexOf(' '));
@@ -63,110 +75,19 @@ public class Duke {
     }
 
     public static void printList() throws DukeException {
-        if(taskList.size() == 0){
+        if(TaskList.taskList.size() == 0){
             throw new DukeException();
         }
 
-        for(int i = 0; i < taskList.size(); i++) {
-            Task t = taskList.get(i);
+        for(int i = 0; i < TaskList.taskList.size(); i++) {
+            Task t = TaskList.taskList.get(i);
             System.out.println( (i+1) + ". " + t.toString());
         }
     }
 
-    public static void markDone(String inputCommand) {
-        int taskNumber;
-        Task selectedTask;
-
-        try{
-            taskNumber = Integer.parseInt(removeFirstWordOf(inputCommand)) - 1;
-        } catch (NumberFormatException e) {
-            System.out.println(MESSAGE_ERROR_DONE);
-            return;
-        }
-
-        try{
-            selectedTask = taskList.get(taskNumber);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("ERROR: task '" + (taskNumber + 1) + "' does not exist");
-            return;
-        }
-
-        selectedTask.setDone(true);
-        System.out.println("Nice! I've marked this task as done:\n\t" + selectedTask.toString());
-    }
-
-    public static Task addTodo(String inputCommand) throws DukeException {
-        String todoName = removeFirstWordOf(inputCommand);
-
-        if(todoName.equals("")){
-            throw new DukeException();
-        }
-
-        Task t = new ToDo(todoName);
-        addTask(t);
-        return t;
-    }
-
-    public static Task addDeadline(String inputCommand) throws DukeException{
-        String deadlineCommand, description = "", by = "";
-        int byIndex;
-
-        deadlineCommand = removeFirstWordOf(inputCommand);
-        if(deadlineCommand.equals("") || deadlineCommand.equals(TAG_BY.trim())) {
-            throw new DukeException();
-        }
-
-        try {
-            byIndex = inputCommand.indexOf(TAG_BY);
-            description = removeFirstWordOf(inputCommand.substring(0, byIndex - 1));
-            by = inputCommand.substring(byIndex + 4);
-            if(by.equals("")) {
-                throw new DukeException();
-            }
-        } catch (StringIndexOutOfBoundsException | DukeException e){
-            System.out.println(MESSAGE_ERROR_DEADLINE_MISSING_BY);
-            return null;
-        }
-
-        Task t = new Deadline(description, by);
-        addTask(t);
-        return t;
-    }
-
-    public static Task addEvent(String inputCommand) throws DukeException {
-        String description = "", at = "", eventCommand;
-        int atIndex;
-
-        eventCommand = removeFirstWordOf(inputCommand).trim();
-        if(eventCommand.equals("") || eventCommand.equals(TAG_AT.trim())){
-            throw new DukeException();
-        }
-
-        try{
-            atIndex = inputCommand.indexOf(TAG_AT);
-            description = removeFirstWordOf(inputCommand.substring(0, atIndex - 1));
-            at = inputCommand.substring(atIndex + 4);
-            if(at.equals("")) {
-                throw new DukeException();
-            }
-        } catch (StringIndexOutOfBoundsException | DukeException e){
-            System.out.println(MESSAGE_ERROR_EVENT_MISSING_AT);
-            return null;
-        }
-
-        Task t = new Event(description, at);
-        addTask(t);
-        return t;
-    }
-
-    public static void addTask(Task t){
-        taskList.add(t);
-        numberOfTasks++;
-    }
-
     public static void printAddTaskMessage(Task task) {
         System.out.println("Got it. I've added this task:\n\t" + task.toString());
-        System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+        System.out.println("Now you have " + TaskList.numberOfTasks + " tasks in the list.");
     }
 
     public static void load() {
@@ -174,18 +95,18 @@ public class Duke {
         File file = new File(filePathString);
         try {
             if(!directoryExists) {
-                System.out.println(dirPath + MESSAGE_CREATING_DIRECTORY);
+                printCreatingDirectoryMessage();
                 File directory = new File(dirPath.toString());
                 directory.mkdir();
             }
             if (file.createNewFile()) {
-                System.out.println(filePathString + MESSAGE_CREATING_FILE);
-                System.out.println("File created at: " + file.getCanonicalPath());
+                printCreatingFileMessage(filePathString);
+                printFileCreatedMessage(file);
             } else {
-                System.out.println("File loaded from: " + file.getCanonicalPath());
+                printFileLoadedMessage(file);
             }
         } catch (IOException e) {
-            System.out.println("ERROR: Can't find file at: " + filePathString);
+            printFileError(filePathString);
         }
 
         FileInputStream stream;
@@ -201,23 +122,23 @@ public class Duke {
                     switch (strLine.charAt(0)) {
                     case 'T':
                         try{
-                            t = addTodo(strLine);
+                            t = TaskList.addTodo(strLine);
                         } catch(DukeException e) {
-                            System.out.println(MESSAGE_ERROR_TODO);
+                            printTodoError();
                         }
                         break;
                     case 'D':
                         try{
-                            t = addDeadline(strLine);
+                            t = TaskList.addDeadline(strLine);
                         } catch(DukeException e) {
-                            System.out.println(MESSAGE_ERROR_DEADLINE);
+                            printDeadlineError();
                         }
                         break;
                     case 'E':
                         try{
-                            t = addEvent(strLine);
+                            t = TaskList.addEvent(strLine);
                         } catch(DukeException e) {
-                            System.out.println(MESSAGE_ERROR_EVENT);
+                            printEventError();
                         }
                         break;
                     default:
@@ -238,15 +159,39 @@ public class Duke {
                 throw e;
             }
         } catch(IOException e) {
-            System.out.println(MESSAGE_ERROR_FILE);
+            printFileError();
         }
+    }
+
+    public static void printCreatingDirectoryMessage() {
+        System.out.println(dirPath + MESSAGE_CREATING_DIRECTORY);
+    }
+
+    public static void printCreatingFileMessage(String filePathString) {
+        System.out.println(filePathString + MESSAGE_CREATING_FILE);
+    }
+
+    public static void printDeadlineError() {
+        System.out.println(MESSAGE_ERROR_DEADLINE);
+    }
+
+    public static void printFileLoadedMessage(File file) throws IOException {
+        System.out.println("File loaded from: " + file.getCanonicalPath());
+    }
+
+    public static void printFileCreatedMessage(File file) throws IOException {
+        System.out.println("File created at: " + file.getCanonicalPath());
+    }
+
+    public static void printFileError(String filePathString) {
+        System.out.println("ERROR: Can't find file at: " + filePathString);
     }
 
     public static void save(){
         StringBuilder lines = new StringBuilder();
 
-        for (int i = 0; i < numberOfTasks; i++) {
-            Task task = taskList.get(i);
+        for (int i = 0; i < TaskList.numberOfTasks; i++) {
+            Task task = TaskList.taskList.get(i);
             if (task instanceof ToDo) {
                 lines.append("T|" + (task.getDone()?"1" : "0") + "| " + task.getDescription());
             } else if (task instanceof Deadline) {
@@ -277,32 +222,13 @@ public class Duke {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                System.out.println(MESSAGE_ERROR_FILE);
+                printFileError();
             }
         }
     }
 
-    public static void delete(String inputCommand) {
-        int taskNumber;
-        Task selectedTask;
-
-        try{
-            taskNumber = Integer.parseInt(removeFirstWordOf(inputCommand)) - 1;
-        } catch (NumberFormatException e) {
-            System.out.println(MESSAGE_ERROR_DELETE);
-            return;
-        }
-
-        try{
-            selectedTask = taskList.get(taskNumber);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("ERROR: task '" + (taskNumber + 1) + "' does not exist");
-            return;
-        }
-
-        System.out.println("Noted. I've removed this task:\n\t" + selectedTask.toString());
-        System.out.println("Now you have " + (--numberOfTasks) + " tasks in the list.");
-        taskList.remove(taskNumber);
+    public static void printFileError() {
+        System.out.println(MESSAGE_ERROR_FILE);
     }
 
     public static Task parseCommand(String inputCommand) {
@@ -315,35 +241,35 @@ public class Duke {
                 try{
                     printList();
                 } catch(DukeException e){
-                    System.out.println(MESSAGE_ERROR_EMPTY_LIST);
+                    printEmptyListError();
                 }
                 break;
             case "done":
-                markDone(inputCommand);
+                TaskList.markDone(inputCommand);
                 break;
             case "todo":
                 try{
-                    task = addTodo(inputCommand);
+                    task = TaskList.addTodo(inputCommand);
                 } catch(DukeException e) {
-                    System.out.println(MESSAGE_ERROR_TODO);
+                    printTodoError();
                 }
                 break;
             case "deadline":
                 try{
-                    task = addDeadline(inputCommand);
+                    task = TaskList.addDeadline(inputCommand);
                 } catch(DukeException e) {
-                    System.out.println(MESSAGE_ERROR_DEADLINE);
+                    printDeadlineError();
                 }
                 break;
             case "event":
                 try{
-                    task = addEvent(inputCommand);
+                    task = TaskList.addEvent(inputCommand);
                 } catch(DukeException e) {
-                    System.out.println(MESSAGE_ERROR_EVENT);
+                    printEventError();
                 }
                 break;
             case "delete":
-                delete(inputCommand);
+                TaskList.delete(inputCommand);
                 break;
             case "bye":
                 return null;
@@ -352,9 +278,25 @@ public class Duke {
             }
             save();
         } catch (DukeException e){
-            System.out.println("ERROR: '" + firstWord + "'" + MESSAGE_ERROR_INVALID_COMMAND);
+            printInvalidCommandError(firstWord);
         }
         return task;
+    }
+
+    public static void printEventError() {
+        System.out.println(MESSAGE_ERROR_EVENT);
+    }
+
+    public static void printTodoError() {
+        System.out.println(MESSAGE_ERROR_TODO);
+    }
+
+    public static void printEmptyListError() {
+        System.out.println(MESSAGE_ERROR_EMPTY_LIST);
+    }
+
+    public static void printInvalidCommandError(String firstWord) {
+        System.out.println("ERROR: '" + firstWord + "' is not a valid command");
     }
 
     public static void main(String[] args) {
@@ -362,16 +304,25 @@ public class Duke {
         System.out.println(MESSAGE_GREETING);
 
         do {
-            inputCommand = in.nextLine();
+            inputCommand = readInput();
             Task task = parseCommand(inputCommand);
-            System.out.println(MESSAGE_LINEBREAK);
+            printLinebreak();
             if(task != null) {
                 printAddTaskMessage(task);
-                System.out.println(MESSAGE_LINEBREAK);
+                printLinebreak();
             };
         } while (!inputCommand.equals("bye"));
 
+        printByeMessage();
+        printLinebreak();
+    }
+
+    public static void printByeMessage() {
         System.out.println(MESSAGE_BYE);
+    }
+
+    public static void printLinebreak() {
         System.out.println(MESSAGE_LINEBREAK);
     }
+
 }
