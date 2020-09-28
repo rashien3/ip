@@ -11,14 +11,18 @@ public class TaskList {
     public static ArrayList<Task> taskList = new ArrayList<Task>();
     public static int numberOfTasks = 0;
 
+    TaskList () {
+
+    }
+
     public static void markDone(String inputCommand) {
         int taskNumber;
         Task selectedTask;
 
         try {
-            taskNumber = Integer.parseInt(Duke.removeFirstWordOf(inputCommand)) - 1;
+            taskNumber = Integer.parseInt(Ui.removeFirstWordOf(inputCommand)) - 1;
         } catch (NumberFormatException e) {
-            Duke.printDoneError();
+            Ui.printDoneError();
             return;
         }
 
@@ -36,7 +40,7 @@ public class TaskList {
 
 
     public static Task addTodo(String inputCommand) throws DukeException {
-        String todoName = Duke.removeFirstWordOf(inputCommand);
+        String todoName = Ui.removeFirstWordOf(inputCommand);
 
         if (todoName.equals("")) {
             throw new DukeException();
@@ -51,20 +55,20 @@ public class TaskList {
         String deadlineCommand, description = "", by = "";
         int byIndex;
 
-        deadlineCommand = Duke.removeFirstWordOf(inputCommand);
+        deadlineCommand = Ui.removeFirstWordOf(inputCommand);
         if (deadlineCommand.equals("") || deadlineCommand.equals(TAG_BY.trim())) {
             throw new DukeException();
         }
 
         try {
             byIndex = inputCommand.indexOf(TAG_BY);
-            description = Duke.removeFirstWordOf(inputCommand.substring(0, byIndex - 1));
+            description = Ui.removeFirstWordOf(inputCommand.substring(0, byIndex - 1));
             by = inputCommand.substring(byIndex + 4);
             if (by.equals("")) {
                 throw new DukeException();
             }
         } catch (StringIndexOutOfBoundsException | DukeException e) {
-            Duke.printMissingByError();
+            Ui.printMissingByError();
             return null;
         }
 
@@ -79,20 +83,20 @@ public class TaskList {
         String description = "", at = "", eventCommand;
         int atIndex;
 
-        eventCommand = Duke.removeFirstWordOf(inputCommand).trim();
+        eventCommand = Ui.removeFirstWordOf(inputCommand).trim();
         if (eventCommand.equals("") || eventCommand.equals(TAG_AT.trim())) {
             throw new DukeException();
         }
 
         try {
             atIndex = inputCommand.indexOf(TAG_AT);
-            description = Duke.removeFirstWordOf(inputCommand.substring(0, atIndex - 1));
+            description = Ui.removeFirstWordOf(inputCommand.substring(0, atIndex - 1));
             at = inputCommand.substring(atIndex + 4);
             if (at.equals("")) {
                 throw new DukeException();
             }
         } catch (StringIndexOutOfBoundsException | DukeException e) {
-            Duke.printMissingAtError();
+            Ui.printMissingAtError();
             return null;
         }
 
@@ -113,9 +117,9 @@ public class TaskList {
         Task selectedTask;
 
         try {
-            taskNumber = Integer.parseInt(Duke.removeFirstWordOf(inputCommand)) - 1;
+            taskNumber = Integer.parseInt(Ui.removeFirstWordOf(inputCommand)) - 1;
         } catch (NumberFormatException e) {
-            Duke.printDeleteError();
+            Ui.printDeleteError();
             return;
         }
 
