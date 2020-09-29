@@ -136,4 +136,25 @@ public class TaskList {
     public static int getNumberOfTasks() {
         return numberOfTasks;
     }
+
+    public static void find(String inputCommand) {
+        String toFind = Ui.removeFirstWordOf(inputCommand);
+        ArrayList<Task> displayList = new ArrayList<Task>();
+
+        for(Task t : taskList) {
+            if(t.getDescription().contains(toFind)) {
+                displayList.add(t);
+            }
+        }
+        try {
+            Ui.printFindMessage();
+            Ui.printList(displayList);
+        } catch (DukeException ex) {
+            Ui.printFindError();
+        }
+    }
+
+    public static ArrayList<Task> getTaskList() {
+        return taskList;
+    }
 }

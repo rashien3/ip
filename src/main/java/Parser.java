@@ -9,7 +9,7 @@ public class Parser {
             switch (firstWord) {
             case "list":
                 try {
-                    Ui.printList();
+                    Ui.printList(TaskList.getTaskList());
                 } catch (DukeException e) {
                     Ui.printEmptyListError();
                 }
@@ -41,6 +41,8 @@ public class Parser {
             case "delete":
                 TaskList.delete(inputCommand);
                 break;
+            case "find":
+                TaskList.find(inputCommand);
             case "bye":
                 return null;
             default:
