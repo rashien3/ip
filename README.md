@@ -1,26 +1,20 @@
-# Duke project template
+# User Guide
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Duchess is an app for **managing tasks, optimised for use via a Command Line Interface (CLI)**. If you are comfortable with typing a lot, Duchess can help you with managing your todos, deadlines, and events in a quick and intuitive manner. This project was done as part of a requirement of CS2113.
+## Quick Start
 
-## Setting up in Intellij
+Prerequisites: JDK 11
 
-Prerequisites: JDK 11, update Intellij to the most recent version.
-
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project dialog first)
-1. Set up the correct JDK version, as follows:
-   1. Click `Configure` > `Structure for New Projects` and then `Project Settings` > `Project` > `Project SDK`
-   1. If JDK 11 is listed in the drop down, select it. If it is not, click `New...` and select the directory where you installed JDK 11
-   1. Click `OK`
-1. Import the project into Intellij as follows:
-   1. Click `Open or Import`.
-   1. Select the project directory, and click `OK`
-   1. If there are any further prompts, accept the defaults.
-1. After the importing is complete, locate the `src/main/java/Duke.java` file, right-click it, and choose `Run Duke.main()`. If the setup is correct, you should see something like the below:
-   ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+1. Double click the `Duchess.java` file. A CLI should open, and your save file should be automatically loaded from "C://Documents/Duke/ip/data.txt". Otherwise, the directory and data.txt file will be automatically created.
+1. Type the command in the CLI and press Enter to execute it. 
+e.g. typing `list` and pressing Enter will list out all the tasks. Here are the commands you can try:
+    * `list` : prints all current tasks
+    * `done` `[task number]` : marks the task as done
+    * `todo` `[description]`: adds a Todo task
+    * `deadline` `[description]` `/by` `[time]`: adds a Deadline task
+    * `event` `[description]` `/at` `[time]`: adds an Event task
+    * `delete` `[task number]`: deletes a task
+    * `find` `[query]`: searches all task descriptions for the search term
+    * `bye`: terminates Duchess
+  
+ Note: the first word of each command has to be in lower case, and separated from the rest of the command by a space.
