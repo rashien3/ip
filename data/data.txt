@@ -1,3 +1,2 @@
-T|1| nothing
-E|0| lol /at 4
-D|0| yo mama /by afternoon lol
+T|0| laundry
+E|0| CS tutorial /at 2pm

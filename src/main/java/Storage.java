@@ -8,27 +8,44 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Storage {// file path
-    private static final String home = System.getProperty("user.home");// inserts correct file path separator to data.txt file
+/**
+ * Deals with saving, loading, and everything to deal with files
+ */
+public class Storage {
+    private final String home = System.getProperty("user.home");
     private static Path filePath;
     private static Path dirPath;
     private static boolean directoryExists;
 
+    /**
+     * initialiser accepts a string and sets filePath, dirPath and
+     * direcctoryExists in the Documents folder
+     * @param filePath String of paths under Documents/ that data will be saved in
+     */
     Storage(String filePath) {
         this.filePath = Paths.get(home, "Documents", filePath);
         this.dirPath = Paths.get(home, "Documents", filePath.substring(0,filePath.lastIndexOf("/")));
         this.directoryExists = Files.exists(dirPath);
     }
 
+    /**
+     * loads the information from data.txt into the instance of Storage
+     * Creates the directory and file if it is not found
+     * If file is found, parses each line and uses Tasklist methods to add the appropriate type
+     * format: (T/D/E)|(done)| (taskname) /by (time)
+     * eg. T|0| laundry
+     * eg. D|1| homework /by tomorrow
+     */
     public static void load() {
         String filePathString = filePath.toString();
         File file = new File(filePathString);
         try {
             if (!directoryExists) {
                 String dirPathString = dirPath.toString();
-                Ui.printCreatingDirectoryMessage(dirPathString);
                 File directory = new File(dirPathString);
-                directory.mkdir();
+                if(directory.mkdir()) {
+                    Ui.printCreatingDirectoryMessage(dirPathString);
+                };
             }
             if (file.createNewFile()) {
                 Ui.printCreatingFileMessage(filePathString);
@@ -94,6 +111,12 @@ public class Storage {// file path
         }
     }
 
+    /**
+     * automatically called after every change in taskList
+     * save in the format: (T/D/E)|(done)| taskname /by timeeg.
+     * eg. T|0| laundry
+     * eg. D|1| homework /by tomorrow
+     */
     public static void save() {
         StringBuilder lines = new StringBuilder();
 
