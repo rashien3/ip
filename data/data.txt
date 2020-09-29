@@ -1,2 +1,2 @@
-T|0| nothing
-E|1| lol /at 3
+T|0| laundry
+E|0| CS tutorial /at 2pm

@@ -1,12 +1,32 @@
 import task.Task;
 
+/**
+ * Deals with intepretation of a user's command.
+ * Removes the first word and calls the relevant method in TaskList
+ */
 public class Parser {
-    public static Task parseCommand(String inputCommand) {
+    /**
+     * Parse the user's input. The first word determines the command,
+     * and everything after the first words are parameters for that command
+     * Available commands:
+     * 'list': prints all the tasks
+     * 'done' [taskNumber]:marks the task as done
+     * 'todo' [description]: adds a Todo task
+     * 'deadline' [description] '/by' [by]: adds a Deadline task
+     * 'event' [description] '/at' [at]: adds an Event task
+     * 'delete' [taskNumber]: deletes a task
+     * 'find' [query]: searches the tasks for the query
+     * 'bye': terminate Duke
+     *
+     * @param input Line of text inputted by the user
+     * @return If there was a task added, returns that task. Otherwise, null
+     */
+    public static Task parse(String input) {
         Task task = null;
-        String firstWord = Ui.getFirstWordOf(inputCommand);
+        String command = getFirstWordOf(input);
 
         try {
-            switch (firstWord) {
+            switch (command) {
             case "list":
                 try {
                     Ui.printList(TaskList.getTaskList());
@@ -15,34 +35,45 @@ public class Parser {
                 }
                 break;
             case "done":
-                TaskList.markDone(inputCommand);
+                try {
+                    int taskNumber = Integer.parseInt(removeFirstWordOf(input)) - 1;
+                    TaskList.markDone(taskNumber);
+                } catch (NumberFormatException e) {
+                    Ui.printDoneError();
+                }
+
                 break;
             case "todo":
                 try {
-                    task = TaskList.addTodo(inputCommand);
+                    task = TaskList.addTodo(removeFirstWordOf(input));
                 } catch (DukeException e) {
                     Ui.printTodoError();
                 }
                 break;
             case "deadline":
                 try {
-                    task = TaskList.addDeadline(inputCommand);
+                    task = TaskList.addDeadline(removeFirstWordOf(input));
                 } catch (DukeException e) {
                     Ui.printDeadlineError();
                 }
                 break;
             case "event":
                 try {
-                    task = TaskList.addEvent(inputCommand);
+                    task = TaskList.addEvent(removeFirstWordOf(input));
                 } catch (DukeException e) {
                     Ui.printEventError();
                 }
                 break;
             case "delete":
-                TaskList.delete(inputCommand);
+                try {
+                    int taskNumber = Integer.parseInt(removeFirstWordOf(input)) - 1;
+                    TaskList.delete(taskNumber);
+                } catch (NumberFormatException e) {
+                    Ui.printDeleteError();
+                }
                 break;
             case "find":
-                TaskList.find(inputCommand);
+                TaskList.find(removeFirstWordOf(input));
             case "bye":
                 return null;
             default:
@@ -50,8 +81,36 @@ public class Parser {
             }
             Storage.save();
         } catch (DukeException e) {
-            Ui.printInvalidCommandError(firstWord);
+            Ui.printInvalidCommandError(command);
         }
         return task;
+    }
+
+    /**
+     * Returns the first word of input String
+     *
+     * @param input Sentence you want the first word only of
+     * @return First word of input String
+     */
+    public static String getFirstWordOf(String input) {
+        if (input.contains(" ")) {
+            return input.substring(0, input.indexOf(' '));
+        } else {
+            return input;
+        }
+    }
+
+    /**
+     * Returns a sentence without the first word
+     *
+     * @param input Sentence you want the first word removed from
+     * @return The rest of the sentence without the first word
+     */
+    public static String removeFirstWordOf(String input) {
+        if (input.contains(" ")) {
+            return input.substring(input.indexOf(' ') + 1);
+        } else {
+            return "";
+        }
     }
 }
