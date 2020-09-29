@@ -11,55 +11,49 @@ public class TaskList {
     private static ArrayList<Task> taskList = new ArrayList<Task>();
     private static int numberOfTasks = 0;
 
-    public static void markDone(String inputCommand) {
-        int taskNumber;
+    /**
+     *
+     * @param taskNumber
+     */
+    public static void markDone(int taskNumber) {
         Task selectedTask;
-
-        try {
-            taskNumber = Integer.parseInt(Ui.removeFirstWordOf(inputCommand)) - 1;
-        } catch (NumberFormatException e) {
-            Ui.printDoneError();
-            return;
-        }
 
         try {
             selectedTask = taskList.get(taskNumber);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("ERROR: task '" + (taskNumber + 1) + "' does not exist");
+            Ui.printTaskDoesNotExistError(taskNumber + 1);
             return;
         }
 
         selectedTask.setDone(true);
-        System.out.println("Nice! I've marked this task as done:\n\t" + selectedTask.toString());
+        Ui.printMarkDoneMessage(taskNumber + 1, selectedTask.toString());
     }
 
 
 
-    public static Task addTodo(String inputCommand) throws DukeException {
-        String todoName = Ui.removeFirstWordOf(inputCommand);
+    public static Task addTodo(String description) throws DukeException {
 
-        if (todoName.equals("")) {
+        if (description.equals("")) {
             throw new DukeException();
         }
 
-        Task t = new ToDo(todoName);
+        Task t = new ToDo(description);
         addTask(t);
         return t;
     }
 
-    public static Task addDeadline(String inputCommand) throws DukeException {
-        String deadlineCommand, description = "", by = "";
+    public static Task addDeadline(String deadlineCommand) throws DukeException {
+        String description = "", by = "";
         int byIndex;
 
-        deadlineCommand = Ui.removeFirstWordOf(inputCommand);
         if (deadlineCommand.equals("") || deadlineCommand.equals(TAG_BY.trim())) {
             throw new DukeException();
         }
 
         try {
-            byIndex = inputCommand.indexOf(TAG_BY);
-            description = Ui.removeFirstWordOf(inputCommand.substring(0, byIndex - 1));
-            by = inputCommand.substring(byIndex + 4);
+            byIndex = deadlineCommand.indexOf(TAG_BY);
+            description = deadlineCommand.substring(0, byIndex - 1);
+            by = deadlineCommand.substring(byIndex + 4);
             if (by.equals("")) {
                 throw new DukeException();
             }
@@ -75,19 +69,19 @@ public class TaskList {
 
 
 
-    public static Task addEvent(String inputCommand) throws DukeException {
-        String description = "", at = "", eventCommand;
+    public static Task addEvent(String eventCommand) throws DukeException {
+        String description = "", at = "";
         int atIndex;
 
-        eventCommand = Ui.removeFirstWordOf(inputCommand).trim();
+        eventCommand = eventCommand.trim();
         if (eventCommand.equals("") || eventCommand.equals(TAG_AT.trim())) {
             throw new DukeException();
         }
 
         try {
-            atIndex = inputCommand.indexOf(TAG_AT);
-            description = Ui.removeFirstWordOf(inputCommand.substring(0, atIndex - 1));
-            at = inputCommand.substring(atIndex + 4);
+            atIndex = eventCommand.indexOf(TAG_AT);
+            description = eventCommand.substring(0, atIndex - 1);
+            at = eventCommand.substring(atIndex + 4);
             if (at.equals("")) {
                 throw new DukeException();
             }
@@ -106,26 +100,17 @@ public class TaskList {
         numberOfTasks++;
     }
 
-    public static void delete(String inputCommand) {
-        int taskNumber;
+    public static void delete(int taskNumber) {
         Task selectedTask;
-
-        try {
-            taskNumber = Integer.parseInt(Ui.removeFirstWordOf(inputCommand)) - 1;
-        } catch (NumberFormatException e) {
-            Ui.printDeleteError();
-            return;
-        }
 
         try {
             selectedTask = taskList.get(taskNumber);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("ERROR: task '" + (taskNumber + 1) + "' does not exist");
+            Ui.printTaskDoesNotExistError(taskNumber);
             return;
         }
 
-        System.out.println("Noted. I've removed this task:\n\t" + selectedTask.toString());
-        System.out.println("Now you have " + (--numberOfTasks) + " tasks in the list.");
+        Ui.printTaskRemovedMessage(selectedTask.toString(), numberOfTasks--);
         taskList.remove(taskNumber);
     }
 
@@ -138,7 +123,7 @@ public class TaskList {
     }
 
     public static void find(String inputCommand) {
-        String toFind = Ui.removeFirstWordOf(inputCommand);
+        String toFind = Parser.removeFirstWordOf(inputCommand);
         ArrayList<Task> displayList = new ArrayList<Task>();
 
         for(Task t : taskList) {

@@ -47,27 +47,27 @@ public class Storage {// file path
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             try {
                 String strLine;
-                // format: T/D/E | 0/1 | taskname /by time
+                // format: (T/D/E)|(done)| taskname /by time
                 while ((strLine = reader.readLine()) != null) {
-                    Task t = null;
+                    Task task = null;
                     switch (strLine.charAt(0)) {
                     case 'T':
                         try {
-                            t = TaskList.addTodo(strLine);
+                            task = TaskList.addTodo(strLine.substring(5));
                         } catch (DukeException e) {
                             Ui.printTodoError();
                         }
                         break;
                     case 'D':
                         try {
-                            t = TaskList.addDeadline(strLine);
+                            task = TaskList.addDeadline(strLine.substring(5));
                         } catch (DukeException e) {
                             Ui.printDeadlineError();
                         }
                         break;
                     case 'E':
                         try {
-                            t = TaskList.addEvent(strLine);
+                            task = TaskList.addEvent(strLine.substring(5));
                         } catch (DukeException e) {
                             Ui.printEventError();
                         }
@@ -76,7 +76,7 @@ public class Storage {// file path
                         return;
                     }
                     if (strLine.charAt(2) == '1') {
-                        t.setDone(true);
+                        task.setDone(true);
                     }
                 }
             } catch (IOException e) {

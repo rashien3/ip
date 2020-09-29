@@ -17,7 +17,7 @@ public class Ui {
     private static final String MESSAGE_FIND = "Here are the matching tasks in your list:";
     private static final String MESSAGE_ERROR_DONE = "ERROR: 'done' must be followed by an integer";
     private static final String MESSAGE_ERROR_TODO = "ERROR: 'todo' must be followed by a desciption";
-    private static final String MESSAGE_ERROR_DELETE = "ERROR: 'delete' must be followed by a desciption";
+    private static final String MESSAGE_ERROR_DELETE = "ERROR: 'delete' must be followed by an integer";
     private static final String MESSAGE_ERROR_DEADLINE = "ERROR: 'deadline' must be followed by a desciption";
     private static final String MESSAGE_ERROR_DEADLINE_MISSING_BY = "ERROR: 'deadline' must have a /by tag followed by a time";
     private static final String MESSAGE_ERROR_EVENT = "ERROR: 'event' must be followed by a desciption";
@@ -47,22 +47,6 @@ public class Ui {
         Scanner in = new Scanner(System.in);
         inputCommand = in.nextLine();
         return inputCommand;
-    }
-
-    public static String getFirstWordOf(String input) {
-        if (input.contains(" ")) {
-            return inputCommand.substring(0, inputCommand.indexOf(' '));
-        } else {
-            return input;
-        }
-    }
-
-    public static String removeFirstWordOf(String input) {
-        if (input.contains(" ")) {
-            return input.substring(input.indexOf(' ') + 1);
-        } else {
-            return "";
-        }
     }
 
     public static void printList(ArrayList<Task> taskList) throws DukeException {
@@ -146,5 +130,18 @@ public class Ui {
 
     public static void printFindMessage() {
         System.out.println(MESSAGE_FIND);
+    }
+
+    public static void printTaskDoesNotExistError(int taskNumber) {
+        System.out.println("ERROR: task '" + (taskNumber + 1) + "' does not exist");
+    }
+
+    public static void printTaskRemovedMessage(String description, int numberOfTasks) {
+        System.out.println("Noted. I've removed this task:\n\t" + description);
+        System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+    }
+
+    public static void printMarkDoneMessage(int taskNumber, String description) {
+        System.out.println("Nice! I've marked this task as done:\n\t" + taskNumber + ". " + description);
     }
 }
