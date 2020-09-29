@@ -5,7 +5,9 @@ Duchess is an app for **managing tasks, optimised for use via a Command Line Int
 
 Prerequisites: JDK 11
 
-1. Double click the `Duchess.java` file. A CLI should open, and your save file should be automatically loaded from "C://Documents/Duke/ip/data.txt". Otherwise, the directory and data.txt file will be automatically created.
+1. Open the command line.
+1. Locate where your ip.jar file is. Navigate to the file location using the command `cd [file location]`.
+1. Enter the command `java -jar ip.jar`. The program should run and your save file should be automatically loaded from `~/Documents/Duke/ip/data.txt`. Otherwise, the directory and data.txt file will be automatically created.
 1. Type the command in the CLI and press Enter to execute it. 
 e.g. typing `list` and pressing Enter will list out all the tasks. Here are the commands you can try:
     * `list` : prints all current tasks
