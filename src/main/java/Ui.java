@@ -2,6 +2,7 @@ import task.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ui {
@@ -13,6 +14,7 @@ public class Ui {
     private static final String MESSAGE_BYE = "Bye. Hope to see you again soon!";
     private static final String MESSAGE_CREATING_DIRECTORY = " not found. Creating directory...";
     private static final String MESSAGE_CREATING_FILE = " not found. Creating file...";
+    private static final String MESSAGE_FIND = "Here are the matching tasks in your list:";
     private static final String MESSAGE_ERROR_DONE = "ERROR: 'done' must be followed by an integer";
     private static final String MESSAGE_ERROR_TODO = "ERROR: 'todo' must be followed by a desciption";
     private static final String MESSAGE_ERROR_DELETE = "ERROR: 'delete' must be followed by a desciption";
@@ -22,6 +24,7 @@ public class Ui {
     private static final String MESSAGE_ERROR_EVENT_MISSING_AT = "ERROR: 'event' must have a /at tag followed by a time";
     private static final String MESSAGE_ERROR_EMPTY_LIST = "ERROR: You have no tasks!";
     private static final String MESSAGE_ERROR_FILE = "ERROR: data.txt not found";
+    private static final String MESSAGE_ERROR_FIND = "ERROR: No results containing your search term was found";
     private static String inputCommand = "";
 
     public static void printMissingByError() {
@@ -62,13 +65,13 @@ public class Ui {
         }
     }
 
-    public static void printList() throws DukeException {
-        if (TaskList.getNumberOfTasks() == 0) {
+    public static void printList(ArrayList<Task> taskList) throws DukeException {
+        if (taskList.size() == 0) {
             throw new DukeException();
         }
 
-        for (int i = 0; i < TaskList.getNumberOfTasks(); i++) {
-            Task t = TaskList.getTask(i);
+        for (int i = 0; i < taskList.size(); i++) {
+            Task t = taskList.get(i);
             System.out.println((i + 1) + ". " + t.toString());
         }
     }
@@ -135,5 +138,13 @@ public class Ui {
 
     public static String getInputCommand() {
         return inputCommand;
+    }
+
+    public static void printFindError() {
+        System.out.println(MESSAGE_ERROR_FIND);
+    }
+
+    public static void printFindMessage() {
+        System.out.println(MESSAGE_FIND);
     }
 }
