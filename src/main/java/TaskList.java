@@ -163,11 +163,10 @@ public class TaskList {
      * @param query Term to search for
      */
     public static void find(String query) {
-        String toFind = Parser.removeFirstWordOf(query);
         ArrayList<Task> displayList = new ArrayList<Task>();
 
         for(Task t : taskList) {
-            if(t.getDescription().contains(toFind)) {
+            if(t.getDescription().contains(query)) {
                 displayList.add(t);
             }
         }

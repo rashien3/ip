@@ -1,3 +1,2 @@
-T|0| laundry
-E|0| CS tutorial /at 2pm
-T|0| eat
+T|1| laundry
+D|0| quiz 2 /by Saturday 2359
