@@ -50,6 +50,7 @@ public class Ui {
 
     /**
      * Reads in one line from the command terminal
+     *
      * @return The line the user inputted
      */
     public static String readInput() {
@@ -64,17 +65,17 @@ public class Ui {
      * 1. [T][✘] laundry
      * 2. [E][✘] CS tutorial (at: 2pm)
      *
-     * @param taskList ArrayList of tasks to be printed
-     * @throws DukeException Size of ArrayList is 0
+     * @param tasks ArrayList of tasks to be printed
+     * @throws DukeException tasks is empty
      */
-    public static void printList(ArrayList<Task> taskList) throws DukeException {
+    public static void printList(ArrayList<Task> tasks) throws DukeException {
         Ui.printLinebreak();
-        if (taskList.size() == 0) {
+        if (tasks.size() == 0) {
             throw new DukeException();
         }
 
-        for (int i = 0; i < taskList.size(); i++) {
-            Task t = taskList.get(i);
+        for (int i = 0; i < tasks.size(); i++) {
+            Task t = tasks.get(i);
             System.out.println((i + 1) + ". " + t.toString());
         }
         Ui.printLinebreak();
@@ -86,7 +87,8 @@ public class Ui {
 
     /**
      * Prints the 'task successfully added' message
-     * @param task Task that was added
+     *
+     * @param task          Task that was added
      * @param numberOfTasks Number of tasks in taskList
      */
     public static void printAddTaskMessage(Task task, int numberOfTasks) {
@@ -102,6 +104,7 @@ public class Ui {
 
     /**
      * Prints the 'creating file' message
+     *
      * @param filePathString path of file
      */
     public static void printCreatingFileMessage(String filePathString) {
@@ -114,6 +117,7 @@ public class Ui {
 
     /**
      * Prints the 'file successfully loaded' error message
+     *
      * @param file File that was loaded
      * @throws IOException File does not exist
      */
@@ -123,6 +127,7 @@ public class Ui {
 
     /**
      * Prints the 'file created' message
+     *
      * @param file File that was created
      * @throws IOException File does not exist
      */
@@ -132,6 +137,7 @@ public class Ui {
 
     /**
      * prints the 'file not found' error
+     *
      * @param filePathString Path that file is supposed to be at
      */
     public static void printFileError(String filePathString) {
@@ -156,6 +162,7 @@ public class Ui {
 
     /**
      * Prints the 'invalid command' error message
+     *
      * @param firstWord First word of the line the user inputted
      */
     public static void printInvalidCommandError(String firstWord) {
@@ -186,6 +193,7 @@ public class Ui {
 
     /**
      * Prints the 'task does not exist' error
+     *
      * @param taskNumber Number of task that the user tried to interact with
      */
     public static void printTaskDoesNotExistError(int taskNumber) {
@@ -194,20 +202,26 @@ public class Ui {
 
     /**
      * Prints the 'task removed successfully' message
-     * @param description Description of task that was removed
+     *
+     * @param description   Description of task that was removed
      * @param numberOfTasks Number of tasks in taskList after removal
      */
     public static void printTaskRemovedMessage(String description, int numberOfTasks) {
+        printLinebreak();
         System.out.println("Noted. I've removed this task:\n\t" + description);
         System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+        printLinebreak();
     }
 
     /**
      * Prints the 'mark done successfully' message, and the task that was marked as done
-     * @param taskNumber Index number of the task that was marked done
+     *
+     * @param taskNumber  Index number of the task that was marked done
      * @param description Description of the task that was marked done
      */
     public static void printMarkDoneMessage(int taskNumber, String description) {
+        printLinebreak();
         System.out.println("Nice! I've marked this task as done:\n\t" + taskNumber + ". " + description);
+        printLinebreak();
     }
 }

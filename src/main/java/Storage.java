@@ -21,11 +21,12 @@ public class Storage {
     /**
      * initialiser accepts a string and sets filePath, dirPath and
      * direcctoryExists in the Documents folder
+     *
      * @param filePath String of paths under Documents/ that data will be saved in
      */
     Storage(String filePath) {
         this.filePath = Paths.get(home, "Documents", filePath);
-        this.dirPath = Paths.get(home, "Documents", filePath.substring(0,filePath.lastIndexOf("/")));
+        this.dirPath = Paths.get(home, "Documents", filePath.substring(0, filePath.lastIndexOf("/")));
         this.directoryExists = Files.exists(dirPath);
     }
 
@@ -37,16 +38,17 @@ public class Storage {
      * eg. T|0| laundry
      * eg. D|1| homework /by tomorrow
      */
-    public TaskList load() {
+    public TaskList load() throws IOException {
         String filePathString = filePath.toString();
         File file = new File(filePathString);
         try {
             if (!directoryExists) {
                 String dirPathString = dirPath.toString();
                 File directory = new File(dirPathString);
-                if(directory.mkdir()) {
+                if (directory.mkdir()) {
                     Ui.printCreatingDirectoryMessage(dirPathString);
-                };
+                }
+                ;
             }
             if (file.createNewFile()) {
                 Ui.printCreatingFileMessage(filePathString);
@@ -60,56 +62,52 @@ public class Storage {
 
         FileInputStream stream;
         TaskList taskList = new TaskList();
+        stream = new FileInputStream(filePathString);
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         try {
-            stream = new FileInputStream(filePathString);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            try {
-                String strLine;
-                // format: (T/D/E)|(done)| taskname /by time
-                while ((strLine = reader.readLine()) != null) {
-                    Task task = null;
-                    switch (strLine.charAt(0)) {
-                    case 'T':
-                        try {
-                            task = taskList.addTodo(strLine.substring(5));
-                        } catch (DukeException e) {
-                            Ui.printTodoError();
-                        }
-                        break;
-                    case 'D':
-                        try {
-                            task = taskList.addDeadline(strLine.substring(5));
-                        } catch (DukeException e) {
-                            Ui.printDeadlineError();
-                        }
-                        break;
-                    case 'E':
-                        try {
-                            task = taskList.addEvent(strLine.substring(5));
-                        } catch (DukeException e) {
-                            Ui.printEventError();
-                        }
-                        break;
-                    default:
-                        return null;
+            String strLine;
+            // format: (T/D/E)|(Y/N)| [DESCRIPTION] /by [TIME]
+            while ((strLine = reader.readLine()) != null) {
+                Task task = null;
+                switch (strLine.charAt(0)) {
+                case 'T':
+                    try {
+                        task = taskList.addTodo(strLine.substring(5));
+                    } catch (DukeException e) {
+                        Ui.printTodoError();
                     }
-                    if (strLine.charAt(2) == '1') {
-                        task.setDone(true);
+                    break;
+                case 'D':
+                    try {
+                        task = taskList.addDeadline(strLine.substring(5));
+                    } catch (DukeException e) {
+                        Ui.printDeadlineError();
                     }
+                    break;
+                case 'E':
+                    try {
+                        task = taskList.addEvent(strLine.substring(5));
+                    } catch (DukeException e) {
+                        Ui.printEventError();
+                    }
+                    break;
+                default:
+                    return null;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw e;
+                if (strLine.charAt(2) == '1') {
+                    task.setDone(true);
+                }
             }
         } catch (IOException e) {
-            Ui.printFileError();
+            e.printStackTrace();
+        }
+
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
         }
         return taskList;
     }
