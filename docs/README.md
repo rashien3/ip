@@ -73,7 +73,7 @@ Expected outcome:
 ```
 ____________________________________________________________
 Got it. I've added this task:
-	[T][✘] laundry
+	[T][N] laundry
 Now you have 4 tasks in the list.
 ____________________________________________________________
 ```
@@ -95,7 +95,7 @@ Expected outcome:
 ```
 ____________________________________________________________
 Got it. I've added this task:
-	[E][✘] meeting (at: tomorrow)
+	[E][N] meeting (at: tomorrow)
 Now you have 5 tasks in the list.
 ____________________________________________________________
 ```
@@ -117,7 +117,7 @@ Expected outcome:
 ```
 ____________________________________________________________
 Got it. I've added this task:
-	[D][✘] quiz 2 (by: Saturday 2359)
+	[D][N] quiz 2 (by: Saturday 2359)
 Now you have 6 tasks in the list.
 ____________________________________________________________
 ```
@@ -134,9 +134,9 @@ Expected outcome:
 
 ```
 Here are the tasks in your list:
- 1. [T][✘]  read Java coding standards
- 2. [E][✘]  CS2113 Tutorial  (at: [Thursday 2-4pm])
- 3. [D][✘]  complete ip  (by: [Friday])
+ 1. [T][N]  read Java coding standards
+ 2. [E][N]  CS2113 Tutorial  (at: [Thursday 2-4pm])
+ 3. [D][N]  complete ip  (by: [Friday])
 ```
 
 ### `delete` - Delete Task
@@ -157,7 +157,7 @@ Expected outcome:
 ____________________________________________________________
 delete 2
 Noted. I've removed this task:
-	[E][✘] CS tutorial (at: 2pm)
+	[E][N] CS tutorial (at: 2pm)
 Now you have 6 tasks in the list.
 ____________________________________________________________
 ```
@@ -180,7 +180,7 @@ Expected outcome:
 ____________________________________________________________
 done 3
 Nice! I've marked this task as done:
-	3. [T][✓] laundry
+	3. [T][Y] laundry
 ____________________________________________________________
 ```
 
@@ -201,7 +201,7 @@ Expected outcome:
 ```
 ____________________________________________________________
 Here are the matching tasks in your list:
-1. [T][✘] laundry
+1. [T][N] laundry
 ____________________________________________________________
 ```
 

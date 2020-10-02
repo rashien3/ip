@@ -12,21 +12,25 @@ import java.util.ArrayList;
  * or by Storage when loading from file.
  */
 public class TaskList {
-    private static final String TAG_BY = "/by ";
-    private static final String TAG_AT = "/at ";
-    private static ArrayList<Task> taskList = new ArrayList<Task>();
-    private static int numberOfTasks = 0;
+    private ArrayList<Task> tasks = new ArrayList<Task>();
+    private int numberOfTasks = 0;
+
+    public TaskList() {
+    }
+    public TaskList(ArrayList<Task> taskList) {
+        this.tasks = taskList;
+    }
 
     /**
      * Mark the numbered task as done
      *
      * @param taskNumber Number of task to be marked done - 1
      */
-    public static void markDone(int taskNumber) {
+    public void markDone(int taskNumber) {
         Task selectedTask;
 
         try {
-            selectedTask = taskList.get(taskNumber);
+            selectedTask = tasks.get(taskNumber);
         } catch (IndexOutOfBoundsException e) {
             Ui.printTaskDoesNotExistError(taskNumber + 1);
             return;
@@ -44,7 +48,7 @@ public class TaskList {
      * @return Todo task added by this method
      * @throws DukeException Empty description
      */
-    public static Task addTodo(String description) throws DukeException {
+    public Task addTodo(String description) throws DukeException {
 
         if (description.equals("")) {
             throw new DukeException();
@@ -62,10 +66,11 @@ public class TaskList {
      * @return Deadline task added through this method
      * @throws DukeException Either description or /by is empty
      */
-    public static Task addDeadline(String deadlineCommand) throws DukeException {
+    public Task addDeadline(String deadlineCommand) throws DukeException {
         String description = "", by = "";
         int byIndex;
 
+        String TAG_BY = "/by ";
         if (deadlineCommand.equals("") || deadlineCommand.equals(TAG_BY.trim())) {
             throw new DukeException();
         }
@@ -94,11 +99,12 @@ public class TaskList {
      * @return Event task added through this method
      * @throws DukeException Either description or /at is empty
      */
-    public static Task addEvent(String eventCommand) throws DukeException {
+    public Task addEvent(String eventCommand) throws DukeException {
         String description = "", at = "";
         int atIndex;
 
         eventCommand = eventCommand.trim();
+        String TAG_AT = "/at ";
         if (eventCommand.equals("") || eventCommand.equals(TAG_AT.trim())) {
             throw new DukeException();
         }
@@ -125,8 +131,8 @@ public class TaskList {
      *
      * @param t Task to be added to taskList
      */
-    public static void addTask(Task t) {
-        taskList.add(t);
+    public void addTask(Task t) {
+        tasks.add(t);
         numberOfTasks++;
     }
 
@@ -134,25 +140,25 @@ public class TaskList {
      * Delete task from taskList
      * @param taskNumber Index number of task to be deleted - 1
      */
-    public static void delete(int taskNumber) {
+    public void delete(int taskNumber) {
         Task selectedTask;
 
         try {
-            selectedTask = taskList.get(taskNumber);
+            selectedTask = tasks.get(taskNumber);
         } catch (IndexOutOfBoundsException e) {
-            Ui.printTaskDoesNotExistError(taskNumber);
+            Ui.printTaskDoesNotExistError(taskNumber + 1);
             return;
         }
 
         Ui.printTaskRemovedMessage(selectedTask.toString(), numberOfTasks--);
-        taskList.remove(taskNumber);
+        tasks.remove(taskNumber);
     }
 
-    public static Task getTask (int i) {
-        return taskList.get(i);
+    public Task getTask (int i) {
+        return tasks.get(i);
     }
 
-    public static int getNumberOfTasks() {
+    public int getNumberOfTasks() {
         return numberOfTasks;
     }
 
@@ -162,10 +168,10 @@ public class TaskList {
      *
      * @param query Term to search for
      */
-    public static void find(String query) {
+    public void find(String query) {
         ArrayList<Task> displayList = new ArrayList<Task>();
 
-        for(Task t : taskList) {
+        for(Task t : tasks) {
             if(t.getDescription().contains(query)) {
                 displayList.add(t);
             }
@@ -178,7 +184,7 @@ public class TaskList {
         }
     }
 
-    public static ArrayList<Task> getTaskList() {
-        return taskList;
+    public ArrayList<Task> getTasks() {
+        return tasks;
     }
 }

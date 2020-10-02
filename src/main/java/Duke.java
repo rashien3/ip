@@ -2,18 +2,17 @@ import task.*;
 
 public class Duke {
 
-    private Storage storage;
-    private TaskList tasks;
-    private Ui ui;
+    private final TaskList taskList;
+    private final Parser parser;
 
     /**
      * initialises the 3 supporting classes
-     * @param filePath
+     * @param filePath Path of the file to load from under Documents file
      */
     public Duke(String filePath) {
-        ui = new Ui();
-        storage = new Storage(filePath);
-        tasks = new TaskList();
+        Storage storage = new Storage(filePath);
+        taskList = storage.load();
+        parser = new Parser(storage, taskList);
     }
 
     /**
@@ -21,20 +20,16 @@ public class Duke {
      * runs parser on loop until user inputs 'bye'
      */
     public void run() {
-        Storage.load();
         Ui.printGreetingMessage();
 
         do {
-            Task task = Parser.parse(Ui.readInput());
-            Ui.printLinebreak();
+            Task task = parser.parse(Ui.readInput());
             if(task != null) {
-                Ui.printAddTaskMessage(task);
-                Ui.printLinebreak();
+                Ui.printAddTaskMessage(task, taskList.getNumberOfTasks());
             };
         } while (!Ui.getInputCommand().equals("bye"));
 
         Ui.printByeMessage();
-        Ui.printLinebreak();
     }
 
     public static void main(String[] args) {

@@ -5,6 +5,14 @@ import task.Task;
  * Removes the first word and calls the relevant method in TaskList
  */
 public class Parser {
+    Storage storage;
+    TaskList taskList;
+
+    public Parser(Storage storage, TaskList taskList) {
+        this.storage = storage;
+        this.taskList = taskList;
+    }
+
     /**
      * Parse the user's input. The first word determines the command,
      * and everything after the first words are parameters for that command
@@ -21,7 +29,7 @@ public class Parser {
      * @param input Line of text inputted by the user
      * @return If there was a task added, returns that task. Otherwise, null
      */
-    public static Task parse(String input) {
+    public Task parse(String input) {
         Task task = null;
         String command = getFirstWordOf(input);
 
@@ -29,7 +37,7 @@ public class Parser {
             switch (command) {
             case "list":
                 try {
-                    Ui.printList(TaskList.getTaskList());
+                    Ui.printList(taskList.getTasks());
                 } catch (DukeException e) {
                     Ui.printEmptyListError();
                 }
@@ -37,7 +45,7 @@ public class Parser {
             case "done":
                 try {
                     int taskNumber = Integer.parseInt(removeFirstWordOf(input)) - 1;
-                    TaskList.markDone(taskNumber);
+                    taskList.markDone(taskNumber);
                 } catch (NumberFormatException e) {
                     Ui.printDoneError();
                 }
@@ -45,21 +53,21 @@ public class Parser {
                 break;
             case "todo":
                 try {
-                    task = TaskList.addTodo(removeFirstWordOf(input));
+                    task = taskList.addTodo(removeFirstWordOf(input));
                 } catch (DukeException e) {
                     Ui.printTodoError();
                 }
                 break;
             case "deadline":
                 try {
-                    task = TaskList.addDeadline(removeFirstWordOf(input));
+                    task = taskList.addDeadline(removeFirstWordOf(input));
                 } catch (DukeException e) {
                     Ui.printDeadlineError();
                 }
                 break;
             case "event":
                 try {
-                    task = TaskList.addEvent(removeFirstWordOf(input));
+                    task = taskList.addEvent(removeFirstWordOf(input));
                 } catch (DukeException e) {
                     Ui.printEventError();
                 }
@@ -67,19 +75,19 @@ public class Parser {
             case "delete":
                 try {
                     int taskNumber = Integer.parseInt(removeFirstWordOf(input)) - 1;
-                    TaskList.delete(taskNumber);
+                    taskList.delete(taskNumber);
                 } catch (NumberFormatException e) {
                     Ui.printDeleteError();
                 }
                 break;
             case "find":
-                TaskList.find(removeFirstWordOf(input));
+                taskList.find(removeFirstWordOf(input));
             case "bye":
                 return null;
             default:
                 throw new DukeException();
             }
-            Storage.save();
+            storage.save(taskList);
         } catch (DukeException e) {
             Ui.printInvalidCommandError(command);
         }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 /**
  * Deals with all the printing all messages, and reading the user's commands.
  * These methods are called whenever the program does anything or encounters an error.
+ * This class is entirely static because it just prints things
  */
 public class Ui {
     private static final String MESSAGE_LINEBREAK = "____________________________________________________________";
@@ -67,6 +68,7 @@ public class Ui {
      * @throws DukeException Size of ArrayList is 0
      */
     public static void printList(ArrayList<Task> taskList) throws DukeException {
+        Ui.printLinebreak();
         if (taskList.size() == 0) {
             throw new DukeException();
         }
@@ -75,20 +77,33 @@ public class Ui {
             Task t = taskList.get(i);
             System.out.println((i + 1) + ". " + t.toString());
         }
+        Ui.printLinebreak();
     }
 
     public static void printGreetingMessage() {
         System.out.println(MESSAGE_GREETING);
     }
-    public static void printAddTaskMessage(Task task) {
+
+    /**
+     * Prints the 'task successfully added' message
+     * @param task Task that was added
+     * @param numberOfTasks Number of tasks in taskList
+     */
+    public static void printAddTaskMessage(Task task, int numberOfTasks) {
+        Ui.printLinebreak();
         System.out.println("Got it. I've added this task:\n\t" + task.toString());
-        System.out.println("Now you have " + TaskList.getNumberOfTasks() + " tasks in the list.");
+        System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+        Ui.printLinebreak();
     }
 
     public static void printCreatingDirectoryMessage(String dirPath) {
         System.out.println(dirPath + MESSAGE_CREATING_DIRECTORY);
     }
 
+    /**
+     * Prints the 'creating file' message
+     * @param filePathString path of file
+     */
     public static void printCreatingFileMessage(String filePathString) {
         System.out.println(filePathString + MESSAGE_CREATING_FILE);
     }
@@ -97,14 +112,28 @@ public class Ui {
         System.out.println(MESSAGE_ERROR_DEADLINE);
     }
 
+    /**
+     * Prints the 'file successfully loaded' error message
+     * @param file File that was loaded
+     * @throws IOException File does not exist
+     */
     public static void printFileLoadedMessage(File file) throws IOException {
         System.out.println("File loaded from: " + file.getCanonicalPath());
     }
 
+    /**
+     * Prints the 'file created' message
+     * @param file File that was created
+     * @throws IOException File does not exist
+     */
     public static void printFileCreatedMessage(File file) throws IOException {
         System.out.println("File created at: " + file.getCanonicalPath());
     }
 
+    /**
+     * prints the 'file not found' error
+     * @param filePathString Path that file is supposed to be at
+     */
     public static void printFileError(String filePathString) {
         System.out.println("ERROR: Can't find file at: " + filePathString);
     }
@@ -125,12 +154,18 @@ public class Ui {
         System.out.println(MESSAGE_ERROR_EMPTY_LIST);
     }
 
+    /**
+     * Prints the 'invalid command' error message
+     * @param firstWord First word of the line the user inputted
+     */
     public static void printInvalidCommandError(String firstWord) {
         System.out.println("ERROR: '" + firstWord + "' is not a valid command");
     }
 
     public static void printByeMessage() {
+        Ui.printLinebreak();
         System.out.println(MESSAGE_BYE);
+        Ui.printLinebreak();
     }
 
     public static void printLinebreak() {
@@ -149,15 +184,29 @@ public class Ui {
         System.out.println(MESSAGE_FIND);
     }
 
+    /**
+     * Prints the 'task does not exist' error
+     * @param taskNumber Number of task that the user tried to interact with
+     */
     public static void printTaskDoesNotExistError(int taskNumber) {
-        System.out.println("ERROR: task '" + (taskNumber + 1) + "' does not exist");
+        System.out.println("ERROR: task '" + taskNumber + "' does not exist");
     }
 
+    /**
+     * Prints the 'task removed successfully' message
+     * @param description Description of task that was removed
+     * @param numberOfTasks Number of tasks in taskList after removal
+     */
     public static void printTaskRemovedMessage(String description, int numberOfTasks) {
         System.out.println("Noted. I've removed this task:\n\t" + description);
         System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
     }
 
+    /**
+     * Prints the 'mark done successfully' message, and the task that was marked as done
+     * @param taskNumber Index number of the task that was marked done
+     * @param description Description of the task that was marked done
+     */
     public static void printMarkDoneMessage(int taskNumber, String description) {
         System.out.println("Nice! I've marked this task as done:\n\t" + taskNumber + ". " + description);
     }

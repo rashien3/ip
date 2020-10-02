@@ -1,2 +1,5 @@
 T|1| laundry
-D|0| quiz 2 /by Saturday 2359
+E|1| hi /at now
+D|0| aksdfjasdf /by oday
+T|0| lmao
+T|0| laskdfjasdf
